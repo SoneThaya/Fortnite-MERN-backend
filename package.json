@@ -1,0 +1,15 @@
+{
+  "name": "fortnite-mern-backend",
+  "version": "1.0.0",
+  "description": "mern backend",
+  "main": "server.js",
+  "scripts": {
+    "server": "nodemon server"
+  },
+  "author": "sog",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.6"
+  }
+}
