@@ -57,7 +57,7 @@ const itemSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    manifestId: {
+    numReviews: {
       type: Number,
       required: true,
       default: 0,
