@@ -50,6 +50,7 @@ const itemSchema = mongoose.Schema(
     manifestId: {
       type: Number,
       required: true,
+      unique: true,
     },
     reviews: [reviewSchema],
     rating: {

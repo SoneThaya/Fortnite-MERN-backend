@@ -21,7 +21,9 @@ router.get(
 router.get(
   "/:id",
   asyncHandler(async (req, res) => {
-    const item = await Item.findById(req.params.id);
+    const tempManifestId = await req.params.id;
+
+    const item = await Item.findOne({ manifestId: tempManifestId });
 
     if (item) {
       res.json(item);
