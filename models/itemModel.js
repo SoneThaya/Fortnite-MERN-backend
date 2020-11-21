@@ -29,38 +29,30 @@ const itemSchema = mongoose.Schema(
     },
     name: {
       type: String,
-      required: true,
     },
     imageUrl: {
       type: String,
-      required: true,
     },
     rarity: {
       type: String,
-      required: true,
     },
     storeCategory: {
       type: String,
-      required: true,
     },
     vBucks: {
       type: Number,
-      required: true,
     },
     manifestId: {
       type: Number,
-      required: true,
       unique: true,
     },
     reviews: [reviewSchema],
     rating: {
       type: Number,
-      required: true,
       default: 0,
     },
     numReviews: {
       type: Number,
-      required: true,
       default: 0,
     },
   },

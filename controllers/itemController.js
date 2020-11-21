@@ -43,4 +43,54 @@ const deleteItem = asyncHandler(async (req, res) => {
   }
 });
 
-export { getItems, getItemById, deleteItem };
+// @desc     Create an item
+// @route    POST /api/items
+// @access   Private/Admin
+const createItem = asyncHandler(async (req, res) => {
+  const item = new Item({
+    name: "Sample name",
+    user: req.user._id,
+    imageUrl: "",
+    manifestId: 0,
+    rarity: "",
+    storeCategory: "",
+    vBucks: 0,
+    numReviews: 0,
+  });
+
+  const createdItem = await item.save();
+  res.status(201).json(createItem);
+});
+
+// @desc     Update an item
+// @route    PUT /api/items/:id
+// @access   Private/Admin
+const updateItem = asyncHandler(async (req, res) => {
+  const {
+    name,
+    imageUrl,
+    manifestId,
+    rarity,
+    storeCategory,
+    vBucks,
+  } = req.body;
+
+  const item = await Item.findById(req.params.id);
+
+  if (item) {
+    item.name = name;
+    item.imageUrl = imageUrl;
+    item.manifestId = manifestId;
+    item.rarity = rarity;
+    item.storeCategory = storeCategory;
+    item.vBucks = vBucks;
+
+    const updatedItem = await item.save();
+    res.json(updatedItem);
+  } else {
+    res.status(404);
+    throw new Error("Item not found");
+  }
+});
+
+export { getItems, getItemById, deleteItem, updateItem, createItem };
