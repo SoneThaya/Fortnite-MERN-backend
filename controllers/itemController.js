@@ -30,7 +30,9 @@ const getItemById = asyncHandler(async (req, res) => {
 // @route    DELETE /api/items/:id
 // @access   Private/Admin
 const deleteItem = asyncHandler(async (req, res) => {
-  const item = await Item.findById(req.params.id);
+  const tempManifestId = await req.params.id;
+
+  const item = await Item.findOne({ manifestId: tempManifestId });
 
   if (item) {
     await item.remove();
