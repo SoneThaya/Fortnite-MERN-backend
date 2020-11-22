@@ -5,7 +5,16 @@ import Item from "../models/itemModel.js";
 // @route    GET /api/items
 // @access   Public
 const getItems = asyncHandler(async (req, res) => {
-  const items = await Item.find({});
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+    : {};
+
+  const items = await Item.find({ ...keyword });
 
   res.json(items);
 });
