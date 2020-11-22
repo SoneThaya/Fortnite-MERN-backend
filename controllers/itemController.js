@@ -48,18 +48,18 @@ const deleteItem = asyncHandler(async (req, res) => {
 // @access   Private/Admin
 const createItem = asyncHandler(async (req, res) => {
   const item = new Item({
-    name: "Sample name",
+    name: "Sample",
     user: req.user._id,
-    imageUrl: "",
-    manifestId: 0,
-    rarity: "",
-    storeCategory: "",
+    imageUrl: "sample",
+    manifestId: 99999,
+    rarity: "Sample",
+    storeCategory: "Sample",
     vBucks: 0,
     numReviews: 0,
   });
 
   const createdItem = await item.save();
-  res.status(201).json(createItem);
+  res.status(201).json(createdItem);
 });
 
 // @desc     Update an item
@@ -93,4 +93,54 @@ const updateItem = asyncHandler(async (req, res) => {
   }
 });
 
-export { getItems, getItemById, deleteItem, updateItem, createItem };
+// @desc     Create new review
+// @route    POST /api/items/:id/reviews
+// @access   Private
+const createItemReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+
+  const tempManifestId = await req.params.id;
+
+  const item = await Item.findOne({ manifestId: tempManifestId });
+
+  if (item) {
+    const alreadyReviewed = item.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyReviewed) {
+      res.status(400);
+      throw new Error("Item already reviewed.");
+    }
+
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id,
+    };
+
+    item.reviews.push(review);
+
+    item.numReviews = item.reviews.length;
+
+    item.rating =
+      item.reviews.reduce((acc, cur) => cur.rating + acc, 0) /
+      item.reviews.length;
+
+    await item.save();
+    res.status(201).json({ message: "Review added" });
+  } else {
+    res.status(404);
+    throw new Error("Item not found");
+  }
+});
+
+export {
+  getItems,
+  getItemById,
+  deleteItem,
+  updateItem,
+  createItem,
+  createItemReview,
+};
