@@ -5,6 +5,9 @@ import Item from "../models/itemModel.js";
 // @route    GET /api/items
 // @access   Public
 const getItems = asyncHandler(async (req, res) => {
+  const pageSize = 2;
+  const page = Number(req.query.pageNumber) || 1;
+
   const keyword = req.query.keyword
     ? {
         name: {
@@ -14,9 +17,12 @@ const getItems = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const items = await Item.find({ ...keyword });
+  const count = await Item.countDocuments({ ...keyword });
+  const items = await Item.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
 
-  res.json(items);
+  res.json({ items, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc     Fetch single item
